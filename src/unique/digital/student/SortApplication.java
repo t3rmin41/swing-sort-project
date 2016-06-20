@@ -30,7 +30,9 @@ import java.awt.Button;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
@@ -92,7 +94,7 @@ public class SortApplication {
 
         JTextArea textArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane (textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setBounds(185, 110, 219, 141);
+        scrollPane.setBounds(167, 110, 237, 141);
         frame.getContentPane().add(scrollPane);
         
         ButtonGroup group = new ButtonGroup();
@@ -118,6 +120,7 @@ public class SortApplication {
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    textArea.setText("");
                     SortMethod selectedMethod = SortMethod.getMethod(getSelectedButtonText(group));
                     List<StudentStats> studentStatsList = readStudentStatsFromFileUnsorted(inputFile);
                     studentStatsArr = studentStatsList.toArray(new StudentStats[studentStatsList.size()]);
@@ -130,7 +133,6 @@ public class SortApplication {
                                      break;
                     }
                     for (StudentStats stats : studentStatsArr) {
-                        //System.out.println("Student : " + stats.getStudentSurname() + " | score : " + stats.getScore());
                         textArea.append("Student : " + stats.getStudentSurname() + " | score : " + stats.getScore() + "\n");
                     }
                 } catch (IllegalArgumentException iae) {
@@ -140,6 +142,23 @@ public class SortApplication {
         });
         btnNewButton_1.setBounds(187, 51, 217, 23);
         frame.getContentPane().add(btnNewButton_1);
+        
+        JButton btnNewButton_2 = new JButton("Save to file");
+        btnNewButton_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+                if (chooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+                    try(FileWriter fw = new FileWriter(chooser.getSelectedFile()+".txt")) {
+                        fw.write(textArea.getText());
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
+                  }
+            }
+        });
+        btnNewButton_2.setBounds(23, 112, 109, 23);
+        frame.getContentPane().add(btnNewButton_2);
         
 
 
