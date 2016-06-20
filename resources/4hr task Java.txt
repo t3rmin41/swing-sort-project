@@ -1,0 +1,27 @@
+Hi,
+
+When you receive this task I would be grateful if you could send me a one line email to confirm receipt of the task.
+We will be reviewing your code which must be done in a maintainable and re-usable manner
+To have a properly functioning system would take 8-10 hours of work on this task.  We are giving you 4 hours.  We do not expect it to be completed or to be functionable but we do expect it to indicate that you have approached the requirements correctly.
+We are interested in the quality of your code, your capability of design and your speed of work. A fully functioning design which has been rushed to completion is not the goal of this exercise. 
+If you wish to continue and spend more than 4 hours and complete the task then you may do so. But please ensure that you deliver a version at the 4hour stage (to be emailed after 4 hours), and then the completed application. 
+ 
+Time given 4 hours.
+ 
+We need an application to sort students by their performance. We expect that system UI will be written in Swing and allows user to select a text file with student data, sorting algorithm and display result in table with an option to save it to a file.
+ 
+As we are not sure how many students will have to be sorted, we would like you to implement Bubble, Heap and Merge sorting algorithms, but enable system design to be easily extendable in future. 
+ 
+To simplify benchmarking we would like to see a number of records and sorting time.
+Input file example:
+ 
+...
+Student1,8.5
+Student2,6.5
+Student3,5.0
+....
+ 
+Wishing you good luck with the task. 
+
+Thanks
+
