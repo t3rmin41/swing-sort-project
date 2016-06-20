@@ -1,0 +1,5 @@
+Johnson,8.5
+Lawry,9.5
+Robinson,7.5
+Anderson,7.9
+Doe,8.7
