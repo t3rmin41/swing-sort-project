@@ -2,31 +2,22 @@ package unique.digital.student;
 
 import java.awt.Container;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import java.awt.BorderLayout;
-
 import javax.swing.JRadioButton;
-
-import java.awt.Panel;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JDesktopPane;
-import javax.swing.JComboBox;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.awt.Button;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,9 +31,7 @@ public class SortApplication {
 
     private JFrame frame;
     private File inputFile;
-    //private List<StudentStats> studentStats = new ArrayList<StudentStats>();
     private StudentStats[] studentStatsArr = null;
-    
     
     /**
      * Launch the application.
@@ -159,8 +148,6 @@ public class SortApplication {
         });
         btnNewButton_2.setBounds(23, 112, 109, 23);
         frame.getContentPane().add(btnNewButton_2);
-        
-
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
