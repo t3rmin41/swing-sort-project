@@ -23,14 +23,25 @@ import javax.swing.JComboBox;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.awt.Button;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
 
 public class SortApplication {
 
     private JFrame frame;
-
+    private File inputFile;
+    //private List<StudentStats> studentStats = new ArrayList<StudentStats>();
+    private StudentStats[] studentStatsArr = null;
+    
+    
     /**
      * Launch the application.
      */
@@ -63,17 +74,26 @@ public class SortApplication {
         contentPane.setLayout(null);
         frame.setBounds(100, 100, 450, 300);
         
-        JRadioButton bubbleButton = new JRadioButton("Bubble");
+        JRadioButton bubbleButton = new JRadioButton(SortMethod.BUBBLE.getValue());
         bubbleButton.setBounds(23, 17, 109, 23);
         frame.getContentPane().add(bubbleButton);
         
-        JRadioButton heapButton = new JRadioButton("Heap");
+        JRadioButton heapButton = new JRadioButton(SortMethod.HEAP.getValue());
         heapButton.setBounds(23, 43, 109, 23);
         frame.getContentPane().add(heapButton);
         
-        JRadioButton mergeButton = new JRadioButton("Merge");
+        JRadioButton mergeButton = new JRadioButton(SortMethod.MERGE.getValue());
         mergeButton.setBounds(23, 69, 109, 23);
         frame.getContentPane().add(mergeButton);
+        
+        JLabel lblNewLabel = new JLabel("");
+        lblNewLabel.setBounds(187, 85, 217, 14);
+        frame.getContentPane().add(lblNewLabel);
+
+        JTextArea textArea = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane (textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setBounds(185, 110, 219, 141);
+        frame.getContentPane().add(scrollPane);
         
         ButtonGroup group = new ButtonGroup();
         group.add(bubbleButton);
@@ -87,13 +107,42 @@ public class SortApplication {
                 chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
                 int returnVal = chooser.showOpenDialog(frame);
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
-                   System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName());
+                   inputFile = chooser.getSelectedFile();
                 }
             }
         });
-        btnNewButton.setBounds(219, 17, 185, 23);
+        btnNewButton.setBounds(187, 17, 217, 23);
         frame.getContentPane().add(btnNewButton);
+
+        JButton btnNewButton_1 = new JButton("Sort students from input file");
+        btnNewButton_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    SortMethod selectedMethod = SortMethod.getMethod(getSelectedButtonText(group));
+                    List<StudentStats> studentStatsList = readStudentStatsFromFileUnsorted(inputFile);
+                    studentStatsArr = studentStatsList.toArray(new StudentStats[studentStatsList.size()]);
+                    switch (selectedMethod) {
+                        case BUBBLE: studentStatsArr = sortBubble(studentStatsArr);
+                                     break;
+                        case HEAP:   studentStatsArr = sortHeap(studentStatsArr);
+                                     break;
+                        case MERGE:  studentStatsArr = sortMerge(studentStatsArr);
+                                     break;
+                    }
+                    for (StudentStats stats : studentStatsArr) {
+                        //System.out.println("Student : " + stats.getStudentSurname() + " | score : " + stats.getScore());
+                        textArea.append("Student : " + stats.getStudentSurname() + " | score : " + stats.getScore() + "\n");
+                    }
+                } catch (IllegalArgumentException iae) {
+                    lblNewLabel.setText("no sorting method selected");
+                }
+            }
+        });
+        btnNewButton_1.setBounds(187, 51, 217, 23);
+        frame.getContentPane().add(btnNewButton_1);
         
+
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
@@ -105,5 +154,41 @@ public class SortApplication {
             }
         }
         return null;
+    }
+    
+    private List<StudentStats> readStudentStatsFromFileUnsorted(File file) {
+        List<StudentStats> stats = new ArrayList<StudentStats>();
+        try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+            for(String line; (line = br.readLine()) != null; ) {
+                String[] data = line.split(",");
+                stats.add(new StudentStats(data[0], new Double(data[1])));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stats;
+    }
+    
+    private StudentStats[] sortBubble(StudentStats[] studentStats) {
+        StudentStats temp = new StudentStats("", 0.0);
+        for (int i = 0; i < studentStats.length-1; i++ ) {
+            for (int j = 1; j < studentStats.length-i; j++) {
+                if (studentStats[j-1].getScore() < studentStats[j].getScore()) {
+                    temp = studentStats[j-1];
+                    studentStats[j-1] = studentStats[j];
+                    studentStats[j] = temp;
+                }
+            }
+            
+        }
+        return studentStats;
+    }
+    
+    private StudentStats[] sortHeap(StudentStats[] studentStats) {
+        return studentStats;
+    }
+    
+    private StudentStats[] sortMerge(StudentStats[] studentStats) {
+        return studentStats;
     }
 }

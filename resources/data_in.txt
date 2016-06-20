@@ -3,3 +3,8 @@ Lawry,9.5
 Robinson,7.5
 Anderson,7.9
 Doe,8.7
+Curry,9.9
+James,8.9
+Igoudala,8.8
+Duncan,7.3
+Valanciunas,8.6

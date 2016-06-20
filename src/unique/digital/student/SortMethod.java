@@ -12,7 +12,16 @@ public enum SortMethod {
         this.method = method;
     }
     
-    public String getMethod() {
+    public String getValue() {
         return method;
+    }
+
+    public static SortMethod getMethod(String value) {
+        for(SortMethod method : values()) {
+            if(method.getValue().equalsIgnoreCase(value)) {
+                return method;
+            }
+        }
+        throw new IllegalArgumentException();
     }
 }
