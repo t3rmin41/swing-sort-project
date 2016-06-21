@@ -188,7 +188,6 @@ public class SortApplication {
                     studentStats[j] = temp;
                 }
             }
-            
         }
         return studentStats;
     }
