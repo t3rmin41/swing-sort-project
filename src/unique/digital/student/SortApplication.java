@@ -109,6 +109,7 @@ public class SortApplication {
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    lblNewLabel.setText("");
                     textArea.setText("");
                     SortMethod selectedMethod = SortMethod.getMethod(getSelectedButtonText(group));
                     List<StudentStats> studentStatsList = readStudentStatsFromFileUnsorted(inputFile);
@@ -126,6 +127,8 @@ public class SortApplication {
                     }
                 } catch (IllegalArgumentException iae) {
                     lblNewLabel.setText("no sorting method selected");
+                } catch (NullPointerException npe) {
+                    lblNewLabel.setText("No input file selected");
                 }
             }
         });
