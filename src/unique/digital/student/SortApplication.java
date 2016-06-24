@@ -112,8 +112,13 @@ public class SortApplication {
                     lblNewLabel.setText("");
                     textArea.setText("");
                     SortMethod selectedMethod = SortMethod.getMethod(getSelectedButtonText(group));
-                    List<StudentStats> studentStatsList = readStudentStatsFromFileUnsorted(inputFile);
-                    studentStatsArr = studentStatsList.toArray(new StudentStats[studentStatsList.size()]);
+                    List<StudentStats> studentStatsList = null;
+                    try {
+                        studentStatsList = readStudentStatsFromFileUnsorted(inputFile);
+                        studentStatsArr = studentStatsList.toArray(new StudentStats[studentStatsList.size()]);
+                    } catch (NullPointerException npe) {
+                        throw new NullPointerException("No input file selected");
+                    }
                     switch (selectedMethod) {
                         case BUBBLE: studentStatsArr = sortBubble(studentStatsArr);
                                      break;
@@ -126,9 +131,9 @@ public class SortApplication {
                         textArea.append("Student : " + stats.getStudentSurname() + " | score : " + stats.getScore() + "\n");
                     }
                 } catch (IllegalArgumentException iae) {
-                    lblNewLabel.setText("no sorting method selected");
+                    lblNewLabel.setText("No sorting method selected");
                 } catch (NullPointerException npe) {
-                    lblNewLabel.setText("No input file selected");
+                    lblNewLabel.setText(npe.getMessage());
                 }
             }
         });
