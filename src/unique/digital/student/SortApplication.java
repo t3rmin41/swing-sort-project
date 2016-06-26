@@ -235,7 +235,7 @@ public class SortApplication {
         //Compare elements at iFirst and iSecond, 
         //and move smaller element at iMerged
         while (iFirst < first.length && iSecond < second.length) {
-            if (first[iFirst].getScore() > second[iSecond].getScore()) { // compareTo(second[iSecond]) < 0) {
+            if (first[iFirst].getScore() > second[iSecond].getScore()) {
                 result[iMerged] = first[iFirst];
                 iFirst++;
             } else {
