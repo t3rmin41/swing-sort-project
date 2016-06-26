@@ -173,6 +173,15 @@ public class SortApplication {
         });
         saveToFileButton.setBounds(23, 112, 109, 23);
         frame.getContentPane().add(saveToFileButton);
+        
+        JButton btnNewButton = new JButton("Clear text");
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textArea.setText("");
+            }
+        });
+        btnNewButton.setBounds(23, 146, 109, 23);
+        frame.getContentPane().add(btnNewButton);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -201,44 +210,48 @@ public class SortApplication {
     }
     
     private StudentStats[] sortBubble(StudentStats[] studentStats) {
-        StudentStats temp = new StudentStats("", 0.0);
-        for (int i = 0; i < studentStats.length-1; i++ ) {
-            for (int j = 1; j < studentStats.length-i; j++) {
-                if (studentStats[j-1].getScore() < studentStats[j].getScore()) {
-                    temp = studentStats[j-1];
-                    studentStats[j-1] = studentStats[j];
-                    studentStats[j] = temp;
-                }
-            }
-        }
-        return studentStats;
+//        StudentStats temp = new StudentStats("", 0.0);
+//        for (int i = 0; i < studentStats.length-1; i++ ) {
+//            for (int j = 1; j < studentStats.length-i; j++) {
+//                if (studentStats[j-1].getScore() < studentStats[j].getScore()) {
+//                    temp = studentStats[j-1];
+//                    studentStats[j-1] = studentStats[j];
+//                    studentStats[j] = temp;
+//                }
+//            }
+//        }
+//        return studentStats;
+        BubbleSort bubbleSort = new BubbleSort(SortMethod.BUBBLE.getValue(), studentStats);
+        return (StudentStats[]) bubbleSort.getSortedArray();
     }
     
     private StudentStats[] sortHeap(StudentStats[] studentStats) {
-        HeapSort heapSort = new HeapSort(studentStats);
-        heapSort.sort();
-        return heapSort.getSortedArray();
+        HeapSort heapSort = new HeapSort(SortMethod.HEAP.getValue(), studentStats);
+        //heapSort.sort();
+        return (StudentStats[]) heapSort.getSortedArray();
     }
     
     private StudentStats[] sortMerge(StudentStats[] studentStats) {
-        //If list is empty; no need to do anything
-        if (studentStats.length <= 1) {
-            return studentStats;
-        }
-         
-        //Split the array in half in two parts
-        StudentStats[] first = new StudentStats[studentStats.length / 2];
-        StudentStats[] second = new StudentStats[studentStats.length - first.length];
-        System.arraycopy(studentStats, 0, first, 0, first.length);
-        System.arraycopy(studentStats, first.length, second, 0, second.length);
-         
-        //Sort each half recursively
-        sortMerge(first);
-        sortMerge(second);
-         
-        //Merge both halves together, overwriting to original array
-        merge(first, second, studentStats);
-        return studentStats;
+//        //If list is empty; no need to do anything
+//        if (studentStats.length <= 1) {
+//            return studentStats;
+//        }
+//         
+//        //Split the array in half in two parts
+//        StudentStats[] first = new StudentStats[studentStats.length / 2];
+//        StudentStats[] second = new StudentStats[studentStats.length - first.length];
+//        System.arraycopy(studentStats, 0, first, 0, first.length);
+//        System.arraycopy(studentStats, first.length, second, 0, second.length);
+//         
+//        //Sort each half recursively
+//        sortMerge(first);
+//        sortMerge(second);
+//         
+//        //Merge both halves together, overwriting to original array
+//        merge(first, second, studentStats);
+//        return studentStats;
+        MergeSort mergeSort = new MergeSort(SortMethod.MERGE.getValue(), studentStats);
+        return (StudentStats[]) mergeSort.getSortedArray();
     }
     
     private StudentStats[] merge(StudentStats[] first, StudentStats[] second, StudentStats[] result) {

@@ -1,49 +1,54 @@
 package unique.digital.student;
 
-public class HeapSort {
+public class HeapSort extends AbstractSortMethod<Object> {
 
-    private StudentStats[] studentStatsArray = null;
+    public HeapSort(String name, Comparable<Object>[] array) {
+        super(name, array);
+    }
+
     private int n;
     private int left;
     private int right;
     private int lowest;
-    
-    public HeapSort(StudentStats[] a) {
-        this.studentStatsArray = a;
-    }
-    
+
+    @Override
     public void sort() {
-        buildheap(studentStatsArray);
+        buildheap(sortableArray);
         for(int i=n; i>0; i--) {
            exchange(0, i);
            n=n-1;
-           minheap(studentStatsArray, 0);
+           minheap(sortableArray, 0);
         }
     }
-    
-    public StudentStats[] getSortedArray() {
-        return studentStatsArray;
-    }
-    
-    private void buildheap(StudentStats[]a) {
+
+    private void buildheap(Comparable<Object>[]a) {
         n = a.length-1;
         for(int i=n/2; i>=0; i--){
             minheap(a,i);
         }
      }
    
-    private void minheap(StudentStats[] a, int i) { 
+    private void minheap(Comparable<Object>[] a, int i) { 
         left = 2*i;
         right = 2*i+1;
    
-        if(left <= n && a[left].getScore() < a[i].getScore()){
-           lowest=left;
+//        if(left <= n && a[left].getScore() < a[i].getScore()){
+//           lowest=left;
+//        } else {
+//           lowest=i;
+//        }
+//   
+//        if(right <= n && a[right].getScore() < a[lowest].getScore()) {
+//            lowest=right;
+//        }
+        if (left <= n && a[left].compareTo(a[i]) == -1) {
+            lowest = left;
         } else {
-           lowest=i;
+            lowest = i;
         }
-   
-        if(right <= n && a[right].getScore() < a[lowest].getScore()) {
-            lowest=right;
+
+        if (right <= n && a[right].compareTo(a[lowest]) == -1) {
+            lowest = right;
         }
         if(lowest!=i) {
            exchange(i, lowest);
@@ -52,9 +57,9 @@ public class HeapSort {
      }
    
      private void exchange(int i, int j) {
-         StudentStats t = studentStatsArray[i];
-          studentStatsArray[i] = studentStatsArray[j];
-          studentStatsArray[j] = t; 
+         Comparable<Object> t = sortableArray[i];
+         sortableArray[i] = sortableArray[j];
+         sortableArray[j] = t; 
      }
 
 }
