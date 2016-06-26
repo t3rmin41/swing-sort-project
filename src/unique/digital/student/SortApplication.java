@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Instant;
 
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
@@ -32,6 +33,8 @@ public class SortApplication {
     private JFrame frame;
     private File inputFile;
     private StudentStats[] studentStatsArr = null;
+    private long startMillis = 0;
+    private long stopMillis = 0; 
     
     /**
      * Launch the application.
@@ -63,7 +66,7 @@ public class SortApplication {
         frame = new JFrame();
         Container contentPane = frame.getContentPane();
         contentPane.setLayout(null);
-        frame.setBounds(100, 100, 450, 300);
+        frame.setBounds(100, 100, 449, 376);
         
         JRadioButton bubbleButton = new JRadioButton(SortMethod.BUBBLE.getValue());
         bubbleButton.setBounds(23, 17, 109, 23);
@@ -77,13 +80,17 @@ public class SortApplication {
         mergeButton.setBounds(23, 69, 109, 23);
         frame.getContentPane().add(mergeButton);
         
-        JLabel lblNewLabel = new JLabel("");
-        lblNewLabel.setBounds(187, 85, 217, 14);
-        frame.getContentPane().add(lblNewLabel);
+        JLabel errorMessageLabel = new JLabel("");
+        errorMessageLabel.setBounds(187, 109, 217, 14);
+        frame.getContentPane().add(errorMessageLabel);
+        
+        JLabel timeElapsedLabel = new JLabel("");
+        timeElapsedLabel.setBounds(187, 85, 217, 14);
+        frame.getContentPane().add(timeElapsedLabel);
 
         JTextArea textArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane (textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setBounds(167, 110, 237, 141);
+        scrollPane.setBounds(187, 134, 217, 193);
         frame.getContentPane().add(scrollPane);
         
         ButtonGroup group = new ButtonGroup();
@@ -91,8 +98,8 @@ public class SortApplication {
         group.add(heapButton);
         group.add(mergeButton);
         
-        JButton btnNewButton = new JButton("Select input file");
-        btnNewButton.addActionListener(new ActionListener() {
+        JButton inputFileSelectButton = new JButton("Select input file");
+        inputFileSelectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser = new JFileChooser();
                 chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -102,14 +109,15 @@ public class SortApplication {
                 }
             }
         });
-        btnNewButton.setBounds(187, 17, 217, 23);
-        frame.getContentPane().add(btnNewButton);
+        inputFileSelectButton.setBounds(187, 17, 217, 23);
+        frame.getContentPane().add(inputFileSelectButton);
 
-        JButton btnNewButton_1 = new JButton("Sort students from input file");
-        btnNewButton_1.addActionListener(new ActionListener() {
+        JButton sortButton = new JButton("Sort students from input file");
+        sortButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    lblNewLabel.setText("");
+                    errorMessageLabel.setText("");
+                    timeElapsedLabel.setText("");
                     textArea.setText("");
                     SortMethod selectedMethod = SortMethod.getMethod(getSelectedButtonText(group));
                     List<StudentStats> studentStatsList = null;
@@ -120,28 +128,35 @@ public class SortApplication {
                         throw new NullPointerException("No input file selected");
                     }
                     switch (selectedMethod) {
-                        case BUBBLE: studentStatsArr = sortBubble(studentStatsArr);
+                        case BUBBLE: startMillis = Instant.now().toEpochMilli();
+                                     studentStatsArr = sortBubble(studentStatsArr);
+                                     stopMillis = Instant.now().toEpochMilli();
                                      break;
-                        case HEAP:   studentStatsArr = sortHeap(studentStatsArr);
+                        case HEAP:   startMillis = Instant.now().toEpochMilli();
+                                     studentStatsArr = sortHeap(studentStatsArr);
+                                     stopMillis = Instant.now().toEpochMilli();
                                      break;
-                        case MERGE:  studentStatsArr = sortMerge(studentStatsArr);
+                        case MERGE:  startMillis = Instant.now().toEpochMilli();
+                                     studentStatsArr = sortMerge(studentStatsArr);
+                                     stopMillis = Instant.now().toEpochMilli();
                                      break;
                     }
-                    for (StudentStats stats : studentStatsArr) {
-                        textArea.append("Student : " + stats.getStudentSurname() + " | score : " + stats.getScore() + "\n");
+                    for (int i = 0; i < studentStatsArr.length; i++) {
+                        textArea.append((i+1) + " | Student : " + studentStatsArr[i].getStudentSurname() + " | score : " + studentStatsArr[i].getScore() + "\n");
                     }
+                    timeElapsedLabel.setText("Sort method time : " + (stopMillis-startMillis) + " ms");
                 } catch (IllegalArgumentException iae) {
-                    lblNewLabel.setText("No sorting method selected");
+                    errorMessageLabel.setText("No sorting method selected");
                 } catch (NullPointerException npe) {
-                    lblNewLabel.setText(npe.getMessage());
+                    errorMessageLabel.setText(npe.getMessage());
                 }
             }
         });
-        btnNewButton_1.setBounds(187, 51, 217, 23);
-        frame.getContentPane().add(btnNewButton_1);
+        sortButton.setBounds(187, 51, 217, 23);
+        frame.getContentPane().add(sortButton);
         
-        JButton btnNewButton_2 = new JButton("Save to file");
-        btnNewButton_2.addActionListener(new ActionListener() {
+        JButton saveToFileButton = new JButton("Save to file");
+        saveToFileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser = new JFileChooser();
                 chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -154,8 +169,8 @@ public class SortApplication {
                   }
             }
         });
-        btnNewButton_2.setBounds(23, 112, 109, 23);
-        frame.getContentPane().add(btnNewButton_2);
+        saveToFileButton.setBounds(23, 112, 109, 23);
+        frame.getContentPane().add(saveToFileButton);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -198,11 +213,13 @@ public class SortApplication {
     }
     
     private StudentStats[] sortHeap(StudentStats[] studentStats) {
-        return studentStats;
+        HeapSort heapSort = new HeapSort(studentStats);
+        heapSort.sort();
+        return heapSort.getSortedArray();
     }
     
     private StudentStats[] sortMerge(StudentStats[] studentStats) {
-      //If list is empty; no need to do anything
+        //If list is empty; no need to do anything
         if (studentStats.length <= 1) {
             return studentStats;
         }
