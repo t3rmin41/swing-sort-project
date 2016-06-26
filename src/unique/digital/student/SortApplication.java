@@ -116,9 +116,11 @@ public class SortApplication {
         sortButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    // Clean outputs first
                     errorMessageLabel.setText("");
                     timeElapsedLabel.setText("");
                     textArea.setText("");
+                    // Getting input : selected sort method and input file
                     SortMethod selectedMethod = SortMethod.getMethod(getSelectedButtonText(group));
                     List<StudentStats> studentStatsList = null;
                     try {
@@ -184,7 +186,7 @@ public class SortApplication {
         }
         return null;
     }
-    
+
     private List<StudentStats> readStudentStatsFromFileUnsorted(File file) {
         List<StudentStats> stats = new ArrayList<StudentStats>();
         try(BufferedReader br = new BufferedReader(new FileReader(file))) {
